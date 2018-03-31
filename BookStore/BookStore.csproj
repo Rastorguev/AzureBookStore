@@ -172,9 +172,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\Books.mdf" />
     <Content Include="App_Data\Bookstore.mdf" />
     <Content Include="App_Data\Bookstore_log.ldf">
       <DependentUpon>Bookstore.mdf</DependentUpon>
+    </Content>
+    <Content Include="App_Data\Books_log.ldf">
+      <DependentUpon>Books.mdf</DependentUpon>
     </Content>
     <Content Include="App_Data\SoccerInfo.mdf" />
     <Content Include="App_Data\SoccerInfo_log.ldf">
@@ -183,10 +187,6 @@
     <Content Include="App_Data\StudentsContext.mdf" />
     <Content Include="App_Data\StudentsContext_log.ldf">
       <DependentUpon>StudentsContext.mdf</DependentUpon>
-    </Content>
-    <Content Include="App_Data\Test.mdf" />
-    <Content Include="App_Data\Test_log.ldf">
-      <DependentUpon>Test.mdf</DependentUpon>
     </Content>
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />

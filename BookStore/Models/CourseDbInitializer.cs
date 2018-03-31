@@ -6,7 +6,7 @@ using System.Web;
 
 namespace BookStore.Models
 {
-    public class CourseDbInitializer : DropCreateDatabaseAlways<StudentsContext>
+    public class CourseDbInitializer : CreateDatabaseIfNotExists<StudentsContext>
     {
         protected override void Seed(StudentsContext context)
         {
