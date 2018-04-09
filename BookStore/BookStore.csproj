@@ -172,13 +172,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\Books.mdf" />
     <Content Include="App_Data\Bookstore.mdf" />
     <Content Include="App_Data\Bookstore_log.ldf">
       <DependentUpon>Bookstore.mdf</DependentUpon>
-    </Content>
-    <Content Include="App_Data\Books_log.ldf">
-      <DependentUpon>Books.mdf</DependentUpon>
     </Content>
     <Content Include="App_Data\SoccerInfo.mdf" />
     <Content Include="App_Data\SoccerInfo_log.ldf">
