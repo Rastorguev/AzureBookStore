@@ -3,25 +3,16 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Web.Mvc;
 using BookStore.Models;
-using log4net;
 
 namespace BookStore.Controllers
 {
     public class HomeController : Controller
     {
-        private BookContext db = new BookContext();
-        private readonly ILog _logger = LogManager.GetLogger(typeof(HomeController));
+        private BookContext _db = new BookContext();
 
         public ActionResult Index()
         {
-            // получаем из бд все объекты Book
-            IEnumerable<Book> books = db.Books;
-
-            _logger.Debug("Debug message");
-            _logger.Warn("Warn message");
-            _logger.Error("Error message");
-            _logger.Fatal("Fatal message");
-
+            IEnumerable<Book> books = _db.Books;
             return View(books);
         }
 
@@ -30,7 +21,7 @@ namespace BookStore.Controllers
         {
             ViewBag.BookId = id;
             ViewBag.Message = "Это вызов частичного представления из обычного";
-            var books = new SelectList(db.Books, "Author", "Name");
+            var books = new SelectList(_db.Books, "Author", "Name");
             return View(books);
         }
 
@@ -41,7 +32,7 @@ namespace BookStore.Controllers
             {
                 return HttpNotFound();
             }
-            var book = db.Books.Find(id);
+            var book = _db.Books.Find(id);
             if (book != null)
             {
                 return View(book);
@@ -56,7 +47,7 @@ namespace BookStore.Controllers
             {
                 return HttpNotFound();
             }
-            var book = db.Books.Find(id);
+            var book = _db.Books.Find(id);
             if (book != null)
             {
                 return View(book);
@@ -67,8 +58,8 @@ namespace BookStore.Controllers
         [HttpPost]
         public ActionResult EditBook(Book book)
         {
-            db.Entry(book).State = EntityState.Modified;
-            db.SaveChanges();
+            _db.Entry(book).State = EntityState.Modified;
+            _db.SaveChanges();
             return RedirectToAction("Index");
         }
 
@@ -77,9 +68,9 @@ namespace BookStore.Controllers
         {
             purchase.Date = DateTime.Now;
             // добавляем информацию о покупке в базу данных
-            db.Purchases.Add(purchase);
+            _db.Purchases.Add(purchase);
             // сохраняем в бд все изменения
-            db.SaveChanges();
+            _db.SaveChanges();
             return "Спасибо," + purchase.Person + ", за покупку!";
         }
 
@@ -98,8 +89,8 @@ namespace BookStore.Controllers
         [HttpPost]
         public ActionResult Create(Book book)
         {
-            db.Entry(book).State = EntityState.Added;
-            db.SaveChanges();
+            _db.Entry(book).State = EntityState.Added;
+            _db.SaveChanges();
 
             return RedirectToAction("Index");
         }
@@ -107,7 +98,7 @@ namespace BookStore.Controllers
         [HttpGet]
         public ActionResult Delete(int id)
         {
-            var b = db.Books.Find(id);
+            var b = _db.Books.Find(id);
             if (b == null)
             {
                 return HttpNotFound();
@@ -119,22 +110,22 @@ namespace BookStore.Controllers
         [ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
-            var b = db.Books.Find(id);
+            var b = _db.Books.Find(id);
             if (b == null)
             {
                 return HttpNotFound();
             }
-            db.Books.Remove(b);
-            db.SaveChanges();
+            _db.Books.Remove(b);
+            _db.SaveChanges();
             return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)
         {
-            if (db != null)
+            if (_db != null)
             {
-                db.Dispose();
-                db = null;
+                _db.Dispose();
+                _db = null;
             }
             base.Dispose(disposing);
         }
