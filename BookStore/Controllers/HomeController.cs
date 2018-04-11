@@ -1,21 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using BookStore.Models;
+using log4net;
 
 namespace BookStore.Controllers
 {
     public class HomeController : Controller
     {
-        BookContext db = new BookContext();
+        private BookContext db = new BookContext();
+        private readonly ILog _logger = LogManager.GetLogger(typeof(HomeController));
 
-	    public ActionResult Index()
+        public ActionResult Index()
         {
             // получаем из бд все объекты Book
             IEnumerable<Book> books = db.Books;
+
+            _logger.Debug("Debug message");
+            _logger.Warn("Warn message");
+            _logger.Error("Error message");
+            _logger.Fatal("Fatal message");
+
             return View(books);
         }
 
@@ -24,7 +30,7 @@ namespace BookStore.Controllers
         {
             ViewBag.BookId = id;
             ViewBag.Message = "Это вызов частичного представления из обычного";
-            SelectList books = new SelectList(db.Books, "Author", "Name");
+            var books = new SelectList(db.Books, "Author", "Name");
             return View(books);
         }
 
@@ -35,14 +41,13 @@ namespace BookStore.Controllers
             {
                 return HttpNotFound();
             }
-            Book book = db.Books.Find(id);
+            var book = db.Books.Find(id);
             if (book != null)
             {
                 return View(book);
             }
             return HttpNotFound();
         }
-
 
         [HttpGet]
         public ActionResult EditBook(int? id)
@@ -51,7 +56,7 @@ namespace BookStore.Controllers
             {
                 return HttpNotFound();
             }
-            Book book = db.Books.Find(id);
+            var book = db.Books.Find(id);
             if (book != null)
             {
                 return View(book);
@@ -84,12 +89,12 @@ namespace BookStore.Controllers
             return PartialView();
         }
 
-
         [HttpGet]
         public ActionResult Create()
         {
             return View();
         }
+
         [HttpPost]
         public ActionResult Create(Book book)
         {
@@ -102,17 +107,19 @@ namespace BookStore.Controllers
         [HttpGet]
         public ActionResult Delete(int id)
         {
-            Book b = db.Books.Find(id);
+            var b = db.Books.Find(id);
             if (b == null)
             {
                 return HttpNotFound();
             }
             return View(b);
         }
-        [HttpPost, ActionName("Delete")]
+
+        [HttpPost]
+        [ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
-            Book b = db.Books.Find(id);
+            var b = db.Books.Find(id);
             if (b == null)
             {
                 return HttpNotFound();
@@ -122,14 +129,14 @@ namespace BookStore.Controllers
             return RedirectToAction("Index");
         }
 
-		protected override void Dispose(bool disposing)
-		{
-			if (db != null)
-			{
-				db.Dispose();
-				db = null;
-			}
-			base.Dispose(disposing);
-		}
-	}
+        protected override void Dispose(bool disposing)
+        {
+            if (db != null)
+            {
+                db.Dispose();
+                db = null;
+            }
+            base.Dispose(disposing);
+        }
+    }
 }
