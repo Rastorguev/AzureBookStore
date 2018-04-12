@@ -3,16 +3,25 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Web.Mvc;
 using BookStore.Models;
+using log4net;
+using Microsoft.ApplicationInsights;
 
 namespace BookStore.Controllers
 {
     public class HomeController : Controller
     {
         private BookContext _db = new BookContext();
+        private readonly ILog _logger = LogManager.GetLogger(typeof(HomeController));
+        private readonly TelemetryClient _client =
+            new TelemetryClient {InstrumentationKey = "65281111-ff9f-43a1-9432-cc8d622e30c6"};
 
         public ActionResult Index()
         {
+            _client.TrackEvent("Event from Backend");
+
+            // получаем из бд все объекты Book
             IEnumerable<Book> books = _db.Books;
+
             return View(books);
         }
 
