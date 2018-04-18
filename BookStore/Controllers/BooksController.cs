@@ -10,10 +10,22 @@ namespace BookStore.Controllers
     public class BooksController : ApiController
     {
         // GET api/<controller>
+        /// <summary>
+        /// Get all books
+        /// </summary>
+        /// <returns></returns>
+
+        // GET api/<controller>
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
         }
+
+        /// <summary>
+        /// Get book by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
 
         // GET api/<controller>/5
         public string Get(int id)
