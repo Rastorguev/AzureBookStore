@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using BookStore.Models;
+using BookStore.Search;
 using log4net;
 using Microsoft.ApplicationInsights;
 
@@ -23,7 +24,7 @@ namespace BookStore.Controllers
             // получаем из бд все объекты Book
             IEnumerable<Book> books = _db.Books;
 
-            var search=new Search();
+            var search=new SearchInitializer();
             await search.Init();
 
             return View(books);

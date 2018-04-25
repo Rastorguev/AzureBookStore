@@ -13,7 +13,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BookStore</RootNamespace>
     <AssemblyName>BookStore</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
@@ -227,6 +227,8 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Search\PlayerSearchEntry.cs" />
+    <Compile Include="Search\BookSearchEntry.cs" />
     <Compile Include="Controllers\BooksController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PaginationController.cs" />
@@ -253,7 +255,8 @@
     <Compile Include="Models\StudentsContext.cs" />
     <Compile Include="Models\Team.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Search.cs" />
+    <Compile Include="Search\SearchInitializer.cs" />
+    <Compile Include="Search\StudentSearchEntry.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\Bookstore.mdf" />
@@ -267,6 +270,10 @@
     <Content Include="App_Data\StudentsContext.mdf" />
     <Content Include="App_Data\StudentsContext_log.ldf">
       <DependentUpon>StudentsContext.mdf</DependentUpon>
+    </Content>
+    <Content Include="App_Data\Test.mdf" />
+    <Content Include="App_Data\Test_log.ldf">
+      <DependentUpon>Test.mdf</DependentUpon>
     </Content>
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
