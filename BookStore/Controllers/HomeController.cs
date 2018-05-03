@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using BookStore.AzureSearch;
 using BookStore.Models;
-using BookStore.Search;
 using log4net;
 using Microsoft.ApplicationInsights;
 
@@ -17,15 +18,19 @@ namespace BookStore.Controllers
         private readonly TelemetryClient _client =
             new TelemetryClient {InstrumentationKey = "65281111-ff9f-43a1-9432-cc8d622e30c6"};
 
-        public async Task<ActionResult> Index()
+        public ActionResult Index()
         {
             _client.TrackEvent("Event from Backend");
 
             // получаем из бд все объекты Book
             IEnumerable<Book> books = _db.Books;
 
-            var search=new SearchInitializer();
-            await search.Init();
+            var search = new Search();
+
+           var results=search.Find("Толстой");
+
+           var r1= results.First();
+
 
             return View(books);
         }

@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.Azure.Search;
 
-namespace BookStore.Search
+namespace BookStore.AzureSearch.Entries
 {
-    public class StudentSearchEntry
+    public class StudentSearchEntry : ISearchResult
     {
         [Key]
         public string Id { get; set; }
@@ -19,5 +19,7 @@ namespace BookStore.Search
         [IsSortable]
         [IsFacetable]
         public string Surname { get; set; }
+
+        public string Text => $"Name: {Name}, Surname: {Surname}";
     }
 }

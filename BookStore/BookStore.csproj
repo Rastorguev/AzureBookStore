@@ -227,8 +227,9 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Search\PlayerSearchEntry.cs" />
-    <Compile Include="Search\BookSearchEntry.cs" />
+    <Compile Include="AzureSearch\ISearchResult.cs" />
+    <Compile Include="AzureSearch\Entries\PlayerSearchEntry.cs" />
+    <Compile Include="AzureSearch\Entries\BookSearchEntry.cs" />
     <Compile Include="Controllers\BooksController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PaginationController.cs" />
@@ -255,8 +256,8 @@
     <Compile Include="Models\StudentsContext.cs" />
     <Compile Include="Models\Team.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Search\SearchInitializer.cs" />
-    <Compile Include="Search\StudentSearchEntry.cs" />
+    <Compile Include="AzureSearch\Search.cs" />
+    <Compile Include="AzureSearch\Entries\StudentSearchEntry.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\Bookstore.mdf" />

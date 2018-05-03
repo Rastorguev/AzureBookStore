@@ -1,9 +1,9 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.Azure.Search;
 
-namespace BookStore.Search
+namespace BookStore.AzureSearch.Entries
 {
-    public class PlayerSearchEntry
+    public class BookSearchEntry :ISearchResult
     {
         [Key]
         public string Id { get; set; }
@@ -18,12 +18,13 @@ namespace BookStore.Search
         [IsFilterable]
         [IsSortable]
         [IsFacetable]
-        public string Age { get; set; }
+        public string Author { get; set; }
 
-        [IsSearchable]
         [IsFilterable]
         [IsSortable]
         [IsFacetable]
-        public string Position { get; set; }
+        public int Price { get; set; }
+
+        public string Text => $"Name: {Name}, Author: {Author}, Price: {Price}";
     }
 }
