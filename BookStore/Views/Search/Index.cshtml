@@ -1,0 +1,20 @@
+﻿
+@model IReadOnlyList<BookStore.AzureSearch.SearchResultsGroup>
+@{
+    ViewBag.Title = "Поиск";
+}
+
+<h2>Результаты поска</h2>
+
+@foreach (var resultsGroup in Model)
+{
+    <h3>
+        @Html.DisplayFor(modelItem => resultsGroup.Name)
+    </h3>
+    foreach (var result in resultsGroup.Results)
+    {
+        <p>
+            @Html.DisplayFor(modelItem => result.Text)
+        </p>
+    }
+}
