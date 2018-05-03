@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using BookStore.AzureSearch.Entries;
+using BookStore.Utils;
 using JetBrains.Annotations;
 using Microsoft.Azure.Search;
-using Microsoft.Azure.Search.Models;
 
 namespace BookStore.AzureSearch
 {
@@ -82,9 +80,9 @@ namespace BookStore.AzureSearch
         //    await searchService.Indexers.RunAsync(indexer.Name);
         //}
 
-        public IReadOnlyList<SearchResultsGroup> Find(string searchText)
+        public IReadOnlyList<Grouping<string, ISearchResult>> Find(string searchText)
         {
-            var results = new List<SearchResultsGroup>();
+            var results = new List<Grouping<string, ISearchResult>>();
 
             var books = _booksIndexClient.Documents.Search<BookSearchEntry>(searchText);
             var players = _playersIndexClient.Documents.Search<PlayerSearchEntry>(searchText);
@@ -92,15 +90,18 @@ namespace BookStore.AzureSearch
 
             if (books.Results.Any())
             {
-                results.Add(new SearchResultsGroup("Books", books.Results.Select(r=>r.Document).ToList()));
+                results.Add(new Grouping<string, ISearchResult>("Books",
+                    books.Results.Select(r => r.Document).ToList()));
             }
             if (players.Results.Any())
             {
-                results.Add(new SearchResultsGroup("Players", players.Results.Select(r => r.Document).ToList()));
+                results.Add(new Grouping<string, ISearchResult>("Players",
+                    players.Results.Select(r => r.Document).ToList()));
             }
             if (students.Results.Any())
             {
-                results.Add(new SearchResultsGroup("Students", students.Results.Select(r => r.Document).ToList()));
+                results.Add(new Grouping<string, ISearchResult>("Students",
+                    students.Results.Select(r => r.Document).ToList()));
             }
 
             return results;

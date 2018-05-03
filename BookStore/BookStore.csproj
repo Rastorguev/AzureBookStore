@@ -227,6 +227,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\SwaggerConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include=".Utils\Grouping.cs" />
     <Compile Include="AzureSearch\ISearchResult.cs" />
     <Compile Include="AzureSearch\Entries\PlayerSearchEntry.cs" />
     <Compile Include="AzureSearch\Entries\BookSearchEntry.cs" />
