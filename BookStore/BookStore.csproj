@@ -231,6 +231,8 @@
     <Compile Include="AzureSearch\ISearchResult.cs" />
     <Compile Include="AzureSearch\Entries\PlayerSearchEntry.cs" />
     <Compile Include="AzureSearch\Entries\BookSearchEntry.cs" />
+    <Compile Include="AzureSearch\SearchResultType.cs" />
+    <Compile Include="AzureSearch\SearchResultTypeExtensions.cs" />
     <Compile Include="Controllers\BooksController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PaginationController.cs" />

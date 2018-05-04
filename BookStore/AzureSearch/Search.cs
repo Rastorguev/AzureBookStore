@@ -4,6 +4,7 @@ using BookStore.AzureSearch.Entries;
 using BookStore.Utils;
 using JetBrains.Annotations;
 using Microsoft.Azure.Search;
+using Microsoft.Azure.Search.Models;
 
 namespace BookStore.AzureSearch
 {
@@ -80,27 +81,56 @@ namespace BookStore.AzureSearch
         //    await searchService.Indexers.RunAsync(indexer.Name);
         //}
 
-        public IReadOnlyList<Grouping<string, ISearchResult>> Find(string searchText)
+        public IReadOnlyList<Grouping<SearchResultType, ISearchResult>> Find(string searchText)
         {
-            var results = new List<Grouping<string, ISearchResult>>();
+            var maxResultsCount = 5;
 
-            var books = _booksIndexClient.Documents.Search<BookSearchEntry>(searchText);
-            var players = _playersIndexClient.Documents.Search<PlayerSearchEntry>(searchText);
-            var students = _studentsIndexClient.Documents.Search<StudentSearchEntry>(searchText);
+            var results = new List<Grouping<SearchResultType, ISearchResult>>();
+
+            var books = _booksIndexClient.Documents.Search<BookSearchEntry>(searchText,
+                new SearchParameters
+                {
+                    Top = maxResultsCount,
+                    HighlightFields = new List<string>
+                    {
+                        nameof(BookSearchEntry.Name),
+                        nameof(BookSearchEntry.Author)
+                    }
+                });
+            var players = _playersIndexClient.Documents.Search<PlayerSearchEntry>(searchText,
+                new SearchParameters
+                {
+                    Top = maxResultsCount,
+                    HighlightFields = new List<string>
+                    {
+                        nameof(PlayerSearchEntry.Name),
+                        nameof(PlayerSearchEntry.Position),
+                        nameof(PlayerSearchEntry.Age)
+                    }
+                });
+            var students = _studentsIndexClient.Documents.Search<StudentSearchEntry>(searchText, new SearchParameters
+            {
+                Top = maxResultsCount,
+                HighlightFields = new List<string>
+                {
+                    nameof(StudentSearchEntry.Name),
+                    nameof(StudentSearchEntry.Surname)
+                }
+            });
 
             if (books.Results.Any())
             {
-                results.Add(new Grouping<string, ISearchResult>("Books",
+                results.Add(new Grouping<SearchResultType, ISearchResult>(SearchResultType.Book,
                     books.Results.Select(r => r.Document).ToList()));
             }
             if (players.Results.Any())
             {
-                results.Add(new Grouping<string, ISearchResult>("Players",
+                results.Add(new Grouping<SearchResultType, ISearchResult>(SearchResultType.Player,
                     players.Results.Select(r => r.Document).ToList()));
             }
             if (students.Results.Any())
             {
-                results.Add(new Grouping<string, ISearchResult>("Students",
+                results.Add(new Grouping<SearchResultType, ISearchResult>(SearchResultType.Student,
                     students.Results.Select(r => r.Document).ToList()));
             }
 

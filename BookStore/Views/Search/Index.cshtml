@@ -1,5 +1,5 @@
-﻿
-@model IReadOnlyList<BookStore.Utils.Grouping<string, BookStore.AzureSearch.ISearchResult>>
+﻿@using BookStore.AzureSearch
+@model IReadOnlyList<BookStore.Utils.Grouping<SearchResultType, ISearchResult>>
 @{
     ViewBag.Title = "Поиск";
 }
@@ -8,13 +8,9 @@
 
 @foreach (var resultsGroup in Model)
 {
-    <h3>
-        @Html.DisplayFor(modelItem => resultsGroup.Key)
-    </h3>
+    <h3>@resultsGroup.Key.GetDisplayName()</h3>
     foreach (var result in resultsGroup)
     {
-        <p>
-            @Html.DisplayFor(modelItem => result.Text)
-        </p>
+        <p>@result.Text</p>
     }
 }

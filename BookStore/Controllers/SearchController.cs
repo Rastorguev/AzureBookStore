@@ -15,6 +15,7 @@ namespace BookStore.Controllers
         public ActionResult Index(string searchText)
         {
             var results = _search.Find(searchText);
+
             return View(results);
         }
     }
