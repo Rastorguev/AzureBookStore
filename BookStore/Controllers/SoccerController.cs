@@ -10,7 +10,7 @@ namespace BookStore.Controllers
     public class SoccerController : Controller
     {
         private readonly ISearch _search;
-        private SoccerContex db = new SoccerContex();
+        private SoccerContex _db = new SoccerContex();
 
         public SoccerController(ISearch search)
         {
@@ -19,10 +19,10 @@ namespace BookStore.Controllers
 
         protected override void Dispose(bool disposing)
         {
-            if (db != null)
+            if (_db != null)
             {
-                db.Dispose();
-                db = null;
+                _db.Dispose();
+                _db = null;
             }
 
             base.Dispose(disposing);
@@ -30,7 +30,7 @@ namespace BookStore.Controllers
 
         public ActionResult Filtes(int? team, string position)
         {
-            var players = db.Players.Include(p => p.Team);
+            var players = _db.Players.Include(p => p.Team);
             if (team != null && team != 0)
             {
                 players = players.Where(p => p.TeamId == team);
@@ -41,7 +41,7 @@ namespace BookStore.Controllers
                 players = players.Where(p => p.Position == position);
             }
 
-            var teams = db.Teams.ToList();
+            var teams = _db.Teams.ToList();
             // устанавливаем начальный элемент, который позволит выбрать всех
             teams.Insert(0, new Team {Name = "Все", Id = 0});
 
@@ -64,7 +64,7 @@ namespace BookStore.Controllers
         // GET: Soccer
         public ActionResult Index()
         {
-            var players = db.Players.Include(p => p.Team);
+            var players = _db.Players.Include(p => p.Team);
             return View(players.ToList());
         }
 
@@ -76,13 +76,13 @@ namespace BookStore.Controllers
                 return HttpNotFound();
             }
 
-            var team = db.Teams.Find(id);
+            var team = _db.Teams.Find(id);
             if (team == null)
             {
                 return HttpNotFound();
             }
 
-            team.Players = db.Players.Where(m => m.TeamId == team.Id);
+            team.Players = _db.Players.Where(m => m.TeamId == team.Id);
             return View(team);
         }
 
@@ -90,7 +90,7 @@ namespace BookStore.Controllers
         public ActionResult Create()
         {
             // Формируем список команд для передачи в представление
-            var teams = new SelectList(db.Teams, "Id", "Name");
+            var teams = new SelectList(_db.Teams, "Id", "Name");
             ViewBag.Teams = teams;
             return View();
         }
@@ -99,8 +99,8 @@ namespace BookStore.Controllers
         public ActionResult Create(Player player)
         {
             //Добавляем игрока в таблицу
-            db.Players.Add(player);
-            db.SaveChanges();
+            _db.Players.Add(player);
+            _db.SaveChanges();
             _search.Index(player);
             // перенаправляем на главную страницу
             return RedirectToAction("Index");
@@ -115,11 +115,11 @@ namespace BookStore.Controllers
             }
 
             // Находим в бд футболиста
-            var player = db.Players.Find(id);
+            var player = _db.Players.Find(id);
             if (player != null)
             {
                 // Создаем список команд для передачи в представление
-                var teams = new SelectList(db.Teams, "Id", "Name", player.TeamId);
+                var teams = new SelectList(_db.Teams, "Id", "Name", player.TeamId);
                 ViewBag.Teams = teams;
                 return View(player);
             }
@@ -130,8 +130,27 @@ namespace BookStore.Controllers
         [HttpPost]
         public ActionResult Edit(Player player)
         {
-            db.Entry(player).State = EntityState.Modified;
-            db.SaveChanges();
+            _db.Entry(player).State = EntityState.Modified;
+            _db.SaveChanges();
+
+            _search.Index(player);
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public ActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return HttpNotFound();
+            }
+
+            var player = _db.Players.Find(id);
+
+            _db.Players.Remove(player);
+            _db.SaveChanges();
+
             return RedirectToAction("Index");
         }
     }

@@ -13,6 +13,7 @@ namespace BookStore.AzureSearch
     {
         IReadOnlyList<Grouping<SearchResultType, string>> Find(string searchText);
         void Index([NotNull]Player player);
+        void Delete([NotNull]Player player);
     }
 
     public class Search : ISearch
@@ -152,6 +153,17 @@ namespace BookStore.AzureSearch
             var actions = new List<IndexAction<PlayerSearchEntry>>
             {
                 IndexAction.MergeOrUpload(player.ToSearchEntry())
+            };
+
+            var batch = IndexBatch.New(actions);
+            _playersIndexClient.Documents.Index(batch);
+        }
+
+        public void Delete(Player player)
+        {
+            var actions = new List<IndexAction<PlayerSearchEntry>>
+            {
+                IndexAction.Delete(player.ToSearchEntry())
             };
 
             var batch = IndexBatch.New(actions);
