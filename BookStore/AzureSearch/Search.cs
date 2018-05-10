@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using BookStore.AzureSearch.Entries;
+using BookStore.Models;
 using BookStore.Utils;
 using JetBrains.Annotations;
 using Microsoft.Azure.Search;
@@ -8,18 +9,25 @@ using Microsoft.Azure.Search.Models;
 
 namespace BookStore.AzureSearch
 {
-    public class Search
+    public interface ISearch
+    {
+        IReadOnlyList<Grouping<SearchResultType, string>> Find(string searchText);
+        void Index([NotNull]Player player);
+    }
+
+    public class Search : ISearch
     {
         [NotNull] private readonly SearchServiceClient _serviceClient;
-        private readonly ISearchIndexClient _playersIndexClient;
-        private readonly ISearchIndexClient _booksIndexClient;
-        private readonly ISearchIndexClient _studentsIndexClient;
+        [NotNull] private readonly ISearchIndexClient _playersIndexClient;
+        [NotNull] private readonly ISearchIndexClient _booksIndexClient;
+        [NotNull] private readonly ISearchIndexClient _studentsIndexClient;
         private const string ServiceName = "arbookstore";
         private const string ApiKey = "7A2E82020283E96807ED7D81F7830DD2";
         private const string BooksIndexName = "books";
         private const string PlayersIndexName = "players";
         private const string StudentsIndexName = "students";
 
+        [UsedImplicitly]
         public Search()
         {
             _serviceClient = new SearchServiceClient(ServiceName, new SearchCredentials(ApiKey));
@@ -81,11 +89,11 @@ namespace BookStore.AzureSearch
         //    await searchService.Indexers.RunAsync(indexer.Name);
         //}
 
-        public IReadOnlyList<Grouping<SearchResultType, ISearchResult>> Find(string searchText)
+        public IReadOnlyList<Grouping<SearchResultType, string>> Find(string searchText)
         {
             var maxResultsCount = 5;
 
-            var results = new List<Grouping<SearchResultType, ISearchResult>>();
+            var results = new List<Grouping<SearchResultType, string>>();
 
             var books = _booksIndexClient.Documents.Search<BookSearchEntry>(searchText,
                 new SearchParameters
@@ -120,21 +128,34 @@ namespace BookStore.AzureSearch
 
             if (books.Results.Any())
             {
-                results.Add(new Grouping<SearchResultType, ISearchResult>(SearchResultType.Book,
-                    books.Results.Select(r => r.Document).ToList()));
+                results.Add(new Grouping<SearchResultType, string>(SearchResultType.Book,
+                    books.Results.Select(r => r.Document.GetSerchResult()).ToList()));
             }
+
             if (players.Results.Any())
             {
-                results.Add(new Grouping<SearchResultType, ISearchResult>(SearchResultType.Player,
-                    players.Results.Select(r => r.Document).ToList()));
+                results.Add(new Grouping<SearchResultType, string>(SearchResultType.Player,
+                    players.Results.Select(r => r.Document.GetSerchResult()).ToList()));
             }
+
             if (students.Results.Any())
             {
-                results.Add(new Grouping<SearchResultType, ISearchResult>(SearchResultType.Student,
-                    students.Results.Select(r => r.Document).ToList()));
+                results.Add(new Grouping<SearchResultType, string>(SearchResultType.Student,
+                    students.Results.Select(r => r.Document.GetSerchResult()).ToList()));
             }
 
             return results;
+        }
+
+        public void Index(Player player)
+        {
+            var actions = new List<IndexAction<PlayerSearchEntry>>
+            {
+                IndexAction.MergeOrUpload(player.ToSearchEntry())
+            };
+
+            var batch = IndexBatch.New(actions);
+            _playersIndexClient.Documents.Index(batch);
         }
     }
 }

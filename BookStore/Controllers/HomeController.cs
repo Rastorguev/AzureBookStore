@@ -25,13 +25,6 @@ namespace BookStore.Controllers
             // получаем из бд все объекты Book
             IEnumerable<Book> books = _db.Books;
 
-            var search = new Search();
-
-           var results=search.Find("Толстой");
-
-           var r1= results.First();
-
-
             return View(books);
         }
 

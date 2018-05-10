@@ -2,13 +2,20 @@
 using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
+using BookStore.AzureSearch;
 using BookStore.Models;
 
 namespace BookStore.Controllers
 {
     public class SoccerController : Controller
     {
+        private readonly ISearch _search;
         private SoccerContex db = new SoccerContex();
+
+        public SoccerController(ISearch search)
+        {
+            _search = search;
+        }
 
         protected override void Dispose(bool disposing)
         {
@@ -17,6 +24,7 @@ namespace BookStore.Controllers
                 db.Dispose();
                 db = null;
             }
+
             base.Dispose(disposing);
         }
 
@@ -27,6 +35,7 @@ namespace BookStore.Controllers
             {
                 players = players.Where(p => p.TeamId == team);
             }
+
             if (!string.IsNullOrEmpty(position) && !position.Equals("Все"))
             {
                 players = players.Where(p => p.Position == position);
@@ -66,11 +75,13 @@ namespace BookStore.Controllers
             {
                 return HttpNotFound();
             }
+
             var team = db.Teams.Find(id);
             if (team == null)
             {
                 return HttpNotFound();
             }
+
             team.Players = db.Players.Where(m => m.TeamId == team.Id);
             return View(team);
         }
@@ -90,6 +101,7 @@ namespace BookStore.Controllers
             //Добавляем игрока в таблицу
             db.Players.Add(player);
             db.SaveChanges();
+            _search.Index(player);
             // перенаправляем на главную страницу
             return RedirectToAction("Index");
         }
@@ -101,6 +113,7 @@ namespace BookStore.Controllers
             {
                 return HttpNotFound();
             }
+
             // Находим в бд футболиста
             var player = db.Players.Find(id);
             if (player != null)
@@ -110,6 +123,7 @@ namespace BookStore.Controllers
                 ViewBag.Teams = teams;
                 return View(player);
             }
+
             return RedirectToAction("Index");
         }
 

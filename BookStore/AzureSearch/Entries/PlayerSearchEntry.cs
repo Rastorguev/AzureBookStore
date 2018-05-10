@@ -3,7 +3,7 @@ using Microsoft.Azure.Search;
 
 namespace BookStore.AzureSearch.Entries
 {
-    public class PlayerSearchEntry : ISearchResult
+    public class PlayerSearchEntry
     {
         [Key]
         public string Id { get; set; }
@@ -25,7 +25,5 @@ namespace BookStore.AzureSearch.Entries
         [IsSortable]
         [IsFacetable]
         public string Position { get; set; }
-
-        public string Text => $"Name: {Name}, Age: {Age}, Position: {Position}";
     }
 }

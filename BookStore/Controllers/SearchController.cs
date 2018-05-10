@@ -5,11 +5,11 @@ namespace BookStore.Controllers
 {
     public class SearchController : Controller
     {
-        private readonly Search _search;
+        private readonly ISearch _search;
 
-        public SearchController()
+        public SearchController(ISearch search)
         {
-            _search = new Search();
+            _search = search;
         }
 
         public ActionResult Index(string searchText)
