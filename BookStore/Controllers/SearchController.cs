@@ -1,20 +1,22 @@
-﻿using System.Web.Mvc;
+﻿using System.Threading.Tasks;
+using System.Web.Mvc;
 using BookStore.AzureSearch;
+using JetBrains.Annotations;
 
 namespace BookStore.Controllers
 {
     public class SearchController : Controller
     {
-        private readonly ISearch _search;
+        [NotNull] private readonly ISearch _search;
 
         public SearchController(ISearch search)
         {
             _search = search;
         }
 
-        public ActionResult Index(string searchText)
+        public async Task<ActionResult> Index(string searchText)
         {
-            var results = _search.Find(searchText);
+            var results = await _search.FindAsync(searchText);
 
             return View(results);
         }

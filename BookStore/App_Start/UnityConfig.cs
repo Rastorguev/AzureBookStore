@@ -1,5 +1,6 @@
 using System;
 using BookStore.AzureSearch;
+using BookStore.RedisCache;
 using Unity;
 
 namespace BookStore
@@ -19,6 +20,7 @@ namespace BookStore
         public static void RegisterTypes(IUnityContainer container)
         {
             container.RegisterType<ISearch, Search>();
+            container.RegisterType<ICache, Cache>();
         }
     }
 }
