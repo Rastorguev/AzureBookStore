@@ -1,49 +1,62 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
+﻿using System.Collections.Generic;
 using System.Web.Http;
+using System.Web.Http.Description;
+using BookStore.Models;
 
 namespace BookStore.Controllers
 {
+    /// <summary>  
+    /// My Books Api
+    /// </summary> 
     public class BooksController : ApiController
     {
-        // GET api/<controller>
         /// <summary>
-        /// Get all books
+        /// Get all boooks
         /// </summary>
-        /// <returns></returns>
-
-        // GET api/<controller>
-        public IEnumerable<string> Get()
+        /// <remarks>Use it to get all books</remarks>
+        /// <response code="200"></response>
+        /// <response code="400">Bad request</response>
+        /// <response code="500">Internal Server Error</response>
+        /// <returns>Books</returns>
+        [ResponseType(typeof(IEnumerable<Book>))]
+        [Route("api/GetAllBooks")]
+        public IEnumerable<Book> Get()
         {
-            return new string[] { "value1", "value2" };
+            return new List<Book>
+            {
+                new Book
+                {
+                    Id = 1,
+                    Author = "Author1",
+                    Name = "Name1"
+                },
+                new Book
+                {
+                    Id = 2,
+                    Author = "Author2",
+                    Name = "Name2"
+                }
+            };
         }
 
         /// <summary>
         /// Get book by id
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-
-        // GET api/<controller>/5
+        /// <param name="id">book id</param>
+        /// <returns>The contents of the "summary" tag for the member.</returns>
         public string Get(int id)
         {
             return "value";
         }
 
-        // POST api/<controller>
-        public void Post([FromBody]string value)
+        public void Post([FromBody] string value)
         {
         }
 
-        // PUT api/<controller>/5
-        public void Put(int id, [FromBody]string value)
+        public void Put(int id, [FromBody] string value)
         {
         }
 
-        // DELETE api/<controller>/5
         public void Delete(int id)
         {
         }

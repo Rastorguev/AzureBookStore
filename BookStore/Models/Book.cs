@@ -1,19 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace BookStore.Models
+﻿namespace BookStore.Models
 {
+    /// <summary>
+    /// Book Entity
+    /// </summary>
     public class Book
     {
-        // ID книги
+        /// <summary>
+        /// Id
+        /// </summary>
         public int Id { get; set; }
-        // название книги
+
+        /// <summary>
+        /// Book Name
+        /// </summary>
         public string Name { get; set; }
-        // автор книги
+
+        /// <summary>
+        /// Author
+        /// </summary>
         public string Author { get; set; }
-        // цена
+
+        /// <summary>
+        /// Current Price
+        /// </summary>
         public int Price { get; set; }
     }
 }
